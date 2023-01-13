@@ -1,29 +1,16 @@
 package lt.Karolis.jdbc;
 
-import java.io.FileInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
+
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            Properties properties = new Properties();
-            FileInputStream fileInputStream = new FileInputStream("./src/main/resources/db.properties");
 
-            properties.load(fileInputStream);
+        Repository repository = new Repository();
 
-            String url = properties.getProperty("db.url");
-            String username = properties.getProperty("db.username");
-            String password = properties.getProperty("db.password");
-
-            Connection connection = DriverManager.getConnection(
-                    url,
-                    username,
-                    password
-            );
-
+        try(Connection connection = repository.getConnection()) {
 
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("select * from customers");
@@ -42,7 +29,6 @@ public class Main {
 
             customers.forEach(System.out::println);
 
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
